@@ -109,6 +109,51 @@ select:focus{border-color:var(--kinto-blue);outline:0;box-shadow:0 0 0 3px var(-
 .stat-card:nth-child(4){animation-delay:.2s}
 .stat-card:nth-child(5){animation-delay:.25s}
 @media (max-width:768px){body{padding:1rem}h1{font-size:2rem}.insights-grid{grid-template-columns:1fr}.modal-content{width:95%;margin:10% auto}}
+
+/* New Features CSS */
+.region-card-clickable{cursor:pointer;transition:all .3s ease}
+.region-card-clickable:hover{transform:translateY(-8px);box-shadow:0 12px 24px rgba(0,85,165,.2)}
+.timeline-container{background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;padding:2rem;margin-bottom:2rem;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+.timeline-item{padding:1.5rem;background:var(--bg-secondary);border-radius:8px;margin-bottom:1rem;border-left:4px solid var(--kinto-blue);position:relative}
+.timeline-item::before{content:'';position:absolute;left:-12px;top:24px;width:20px;height:20px;background:var(--kinto-blue);border-radius:50%;border:4px solid var(--bg-secondary)}
+.timeline-date{color:var(--kinto-blue);font-weight:600;font-size:.95rem;margin-bottom:.5rem}
+.timeline-dealer{color:var(--text-primary);font-weight:600;margin-bottom:.25rem}
+.timeline-region{display:inline-block;padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:600;text-transform:uppercase;margin-bottom:.75rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-bottom:2rem}
+.stat-box{background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;padding:2rem;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+.stat-box-label{color:var(--text-secondary);font-size:.875rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem;font-weight:600}
+.stat-box-value{font-size:2.5rem;font-weight:300;color:var(--kinto-blue);line-height:1}
+.stat-box-detail{color:var(--text-secondary);font-size:.85rem;margin-top:.75rem}
+.alert-box{background:#FFF3CD;border:1px solid #FFE69C;border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.alert-title{color:#856404;font-weight:600;margin-bottom:1rem;font-size:1.1rem}
+.alert-item{padding:1rem;background:#fff;border-radius:8px;margin-bottom:.75rem;border-left:4px solid #FF9800}
+.alert-item:last-child{margin-bottom:0}
+.alert-name{font-weight:600;color:var(--text-primary);margin-bottom:.25rem}
+.alert-detail{color:var(--text-secondary);font-size:.85rem}
+.export-button{padding:.75rem 1.5rem;background:var(--kinto-blue);color:#fff;border:none;border-radius:8px;font-family:ToyotaType,sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-right:1rem;transition:all .2s ease}
+.export-button:hover{background:var(--kinto-blue-dark);transform:translateY(-2px)}
+.export-buttons{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+
+/* Toggle and Pagination Styles */
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:2px solid var(--kinto-blue)}
+.section-title{font-size:1.75rem;color:var(--kinto-blue);font-weight:400}
+.toggle-btn{padding:.5rem 1rem;background:var(--kinto-blue);color:#fff;border:none;border-radius:8px;font-family:ToyotaType,sans-serif;cursor:pointer;font-weight:600;transition:all .2s ease}
+.toggle-btn:hover{background:var(--kinto-blue-dark)}
+.toggle-btn.hidden{background:var(--text-secondary)}
+.section-content{margin-bottom:2rem}
+.pagination{display:flex;justify-content:center;gap:1rem;margin-top:2rem;align-items:center}
+.pagination-btn{padding:.75rem 1.5rem;background:var(--kinto-blue);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:ToyotaType,sans-serif;font-weight:600;transition:all .2s ease}
+.pagination-btn:hover:not(:disabled){background:var(--kinto-blue-dark);transform:translateY(-2px)}
+.pagination-btn:disabled{background:var(--text-secondary);cursor:not-allowed;opacity:.5}
+.pagination-info{color:var(--text-secondary);font-weight:600;min-width:150px;text-align:center}
+.region-selector{background:var(--kinto-blue-light);border:2px solid var(--kinto-blue);border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.region-selector-title{color:var(--kinto-blue);font-weight:600;margin-bottom:1rem;font-size:1rem}
+.region-buttons{display:flex;gap:1rem;flex-wrap:wrap}
+.region-btn{padding:.75rem 1.5rem;background:#fff;border:2px solid var(--kinto-blue);color:var(--kinto-blue);border-radius:8px;cursor:pointer;font-family:ToyotaType,sans-serif;font-weight:600;transition:all .2s ease}
+.region-btn:hover{background:var(--kinto-blue-light)}
+.region-btn.active{background:var(--kinto-blue);color:#fff}
+.download-btn{padding:.75rem 1.5rem;background:#4CAF50;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:ToyotaType,sans-serif;font-weight:600;transition:all .2s ease;margin-right:1rem}
+.download-btn:hover{background:#45a049;transform:translateY(-2px)}
 </style>
 </head>
 <body>
@@ -119,6 +164,10 @@ select:focus{border-color:var(--kinto-blue);outline:0;box-shadow:0 0 0 3px var(-
 <div class="refresh-container">
 <button id="refreshBtn" class="refresh-btn" onclick="loadDataFromGoogleSheets()">🔄 Refresh Data</button>
 <span id="lastRefreshTime" class="refresh-time"></span>
+<div style="display:flex;gap:1rem;margin-bottom:1rem;">
+<button class="download-btn" onclick="downloadReportCSV()">📥 Download as CSV</button>
+<button class="download-btn" onclick="downloadReportPDF()" style="background:#2196F3">📄 Download as PDF</button>
+</div>
 </div>
 <div id="loadingIndicator" class="loading-indicator" style="display:none">
 <div class="loading-spinner"></div>
@@ -138,17 +187,20 @@ select:focus{border-color:var(--kinto-blue);outline:0;box-shadow:0 0 0 3px var(-
 <div id="dealer-warningAlert" class="alert" style="display:none"><strong>Note:</strong> Some visits using submission date.</div>
 <div class="grid">
 <div class="stat-card total"><div class="stat-label">Total Visits</div><div class="stat-value" id="dealer-totalVisits">0</div><div class="stat-sublabel" id="dealer-totalSubtext"></div></div>
-<div class="stat-card central"><div class="stat-label">Central Region</div><div class="stat-value" id="dealer-centralCount">0</div></div>
-<div class="stat-card east"><div class="stat-label">East Coast</div><div class="stat-value" id="dealer-eastCount">0</div></div>
-<div class="stat-card north"><div class="stat-label">North Region</div><div class="stat-value" id="dealer-northCount">0</div></div>
-<div class="stat-card west"><div class="stat-label">West Coast</div><div class="stat-value" id="dealer-westCount">0</div></div>
+<div class="stat-card central" onclick="filterByRegionCard('Central region', 'dealer')" style="cursor:pointer;"><div class="stat-label">Central Region</div><div class="stat-value" id="dealer-centralCount">0</div></div>
+<div class="stat-card east" onclick="filterByRegionCard('East Coast region', 'dealer')" style="cursor:pointer;"><div class="stat-label">East Coast</div><div class="stat-value" id="dealer-eastCount">0</div></div>
+<div class="stat-card north" onclick="filterByRegionCard('North region', 'dealer')" style="cursor:pointer;"><div class="stat-label">North Region</div><div class="stat-value" id="dealer-northCount">0</div></div>
+<div class="stat-card west" onclick="filterByRegionCard('West Coast region', 'dealer')" style="cursor:pointer;"><div class="stat-label">West Coast</div><div class="stat-value" id="dealer-westCount">0</div></div>
 </div>
 <div class="chart-container"><h3 class="chart-title">Dealer Visits Over Time</h3><div class="chart-wrapper"><canvas id="dealer-stackedChart"></canvas></div></div>
 <div class="insights-grid">
-<div class="insight-card"><h3 class="insight-title">Visit Summaries by Region</h3><div id="dealer-commentsSummary"></div></div>
-<div class="insight-card"><h3 class="insight-title">Most Common Next Steps</h3><ul class="next-step-list" id="dealer-nextStepsList"></ul></div>
+<div class="insight-card"><h3 class="insight-title">Visit Summaries by Region</h3><div id="dealer-commentsSummary"></div><div class="pagination" id="dealer-commentsPagination"></div></div>
+<div class="insight-card"><h3 class="insight-title">Most Common Next Steps</h3><ul class="next-step-list" id="dealer-nextStepsList"></ul>
+<div class="pagination" id="dealer-nextStepsPagination"></div></div>
 </div>
-<div class="insight-card"><h3 class="insight-title">Dealer Visit Frequency (Click name for details)</h3><table class="frequency-table" id="dealer-frequencyTable"><thead><tr><th class="rank">#</th><th>Dealer Name</th><th class="count">Visits</th></tr></thead><tbody></tbody></table></div>
+<div class="insight-card"><h3 class="insight-title">Dealer Visit Frequency (Click name for details)</h3><table class="frequency-table" id="dealer-frequencyTable"><thead><tr><th class="rank">#</th><th>Dealer Name</th><th class="count">Visits</th></tr></thead><tbody></tbody></table>
+<div class="pagination" id="dealer-frequencyPagination"></div>
+<div class="pagination" id="dealer-frequencyPagination"></div></div>
 </div>
 <div id="customers-tab" class="tab-content">
 <div class="controls">
@@ -159,17 +211,73 @@ select:focus{border-color:var(--kinto-blue);outline:0;box-shadow:0 0 0 3px var(-
 <div id="customer-warningAlert" class="alert" style="display:none"><strong>Note:</strong> Some visits using submission date.</div>
 <div class="grid">
 <div class="stat-card total"><div class="stat-label">Total Visits</div><div class="stat-value" id="customer-totalVisits">0</div><div class="stat-sublabel" id="customer-totalSubtext"></div></div>
-<div class="stat-card central"><div class="stat-label">Central Region</div><div class="stat-value" id="customer-centralCount">0</div></div>
-<div class="stat-card east"><div class="stat-label">East Coast</div><div class="stat-value" id="customer-eastCount">0</div></div>
-<div class="stat-card north"><div class="stat-label">North Region</div><div class="stat-value" id="customer-northCount">0</div></div>
-<div class="stat-card west"><div class="stat-label">West Coast</div><div class="stat-value" id="customer-westCount">0</div></div>
+<div class="stat-card central" onclick="filterByRegionCard('Central region', 'customer')" style="cursor:pointer;"><div class="stat-label">Central Region</div><div class="stat-value" id="customer-centralCount">0</div></div>
+<div class="stat-card east" onclick="filterByRegionCard('East Coast region', 'customer')" style="cursor:pointer;"><div class="stat-label">East Coast</div><div class="stat-value" id="customer-eastCount">0</div></div>
+<div class="stat-card north" onclick="filterByRegionCard('North region', 'customer')" style="cursor:pointer;"><div class="stat-label">North Region</div><div class="stat-value" id="customer-northCount">0</div></div>
+<div class="stat-card west" onclick="filterByRegionCard('West Coast region', 'customer')" style="cursor:pointer;"><div class="stat-label">West Coast</div><div class="stat-value" id="customer-westCount">0</div></div>
 </div>
 <div class="chart-container"><h3 class="chart-title">Customer Visits Over Time</h3><div class="chart-wrapper"><canvas id="customer-stackedChart"></canvas></div></div>
 <div class="insights-grid">
-<div class="insight-card"><h3 class="insight-title">Visit Summaries by Region</h3><div id="customer-commentsSummary"></div></div>
+<div class="insight-card"><h3 class="insight-title">Visit Summaries by Region</h3><div id="customer-commentsSummary"></div><div class="pagination" id="customer-commentsPagination"></div></div>
 <div class="insight-card"><h3 class="insight-title">Most Common Next Steps</h3><ul class="next-step-list" id="customer-nextStepsList"></ul></div>
 </div>
-<div class="insight-card"><h3 class="insight-title">Customer Visit Frequency (Click name for details)</h3><table class="frequency-table" id="customer-frequencyTable"><thead><tr><th class="rank">#</th><th>Customer Company Name</th><th class="count">Visits</th></tr></thead><tbody></tbody></table></div>
+<div class="insight-card"><h3 class="insight-title">Customer Visit Frequency (Click name for details)</h3><table class="frequency-table" id="customer-frequencyTable"><thead><tr><th class="rank">#</th><th>Customer Company Name</th><th class="count">Visits</th></tr></thead><tbody></tbody></table>
+<div class="pagination" id="customer-frequencyPagination"></div></div>
+
+</div>
+
+<!-- New Features Section -->
+<div id="summaryStats" style="display:none;">
+<div class="section-header">
+<h2 class="section-title">Summary Statistics</h2>
+<button class="toggle-btn" onclick="toggleSection('summaryStats')">Hide</button>
+</div>
+<div class="section-content">
+<div class="stats-grid" id="statsGrid"></div>
+</div>
+</div>
+
+<div id="inactiveAlerts" style="display:none;">
+<div class="section-header">
+<h2 class="section-title">⚠️ Inactive Dealers (No visits in 45+ days)</h2>
+<button class="toggle-btn" onclick="toggleSection('inactiveAlerts')">Hide</button>
+</div>
+<div class="section-content">
+<div class="alert-box">
+<div id="inactiveList"></div>
+<div class="pagination" id="inactivePagination"></div>
+</div>
+</div>
+</div>
+
+<div id="visitTimeline" style="display:none;">
+<div class="section-header">
+<h2 class="section-title">Visit Timeline</h2>
+<button class="toggle-btn" onclick="toggleSection('visitTimeline')">Hide</button>
+</div>
+<div class="section-content">
+<div class="timeline-container">
+<div id="timelineContent"></div>
+<div class="pagination" id="timelinePagination"></div>
+</div>
+</div>
+</div>
+
+<div id="regionDetailsModal" class="modal">
+<div class="modal-content">
+<div class="modal-header">
+<span class="modal-close" onclick="closeRegionModal()">&times;</span>
+<h2 id="regionModalTitle"></h2>
+<p class="subtitle" id="regionModalSubtitle"></p>
+</div>
+<div class="modal-body">
+<div class="export-buttons">
+<button class="export-button" onclick="exportRegionDataCSV()">📥 Export as CSV</button>
+</div>
+<div id="regionModalBody"></div>
+</div>
+</div>
+</div>
 </div>
 <div id="detailModal" class="modal">
 <div class="modal-content">
@@ -299,8 +407,16 @@ async function loadDataFromGoogleSheets() {
         const customerFiltered = filterTestData(customerRaw, 'customer');
         
         console.log(`After filtering: ${dealerFiltered.length} dealers, ${customerFiltered.length} customers`);
+
+        console.log('===== DATA VERIFICATION =====');
+        console.log('Dealer data count:', dealerData.length);
+        console.log('Dealer first record:', dealerData[0]);
+        console.log('Customer data count:', customerData.length);
+        console.log('Customer first record:', customerData[0]);
+        console.log('Are they the same array?', dealerData === customerData);
+        console.log('============================');
         
-        // Process data
+        // Process data and assign to global arrays
         dealerData = dealerFiltered.map(row => {
             let visitDate = parseDate(row['Date of Visit']);
             let usingSubmissionDate = false;
@@ -327,15 +443,21 @@ async function loadDataFromGoogleSheets() {
             return {...row, visitDate, usingSubmissionDate};
         });
         
+        // VERIFY DATA WAS ASSIGNED
+        console.log('After assignment:');
+        console.log('dealerData length:', dealerData.length);
+        console.log('customerData length:', customerData.length);
+        console.log('dealerData[0]:', dealerData[0]);
+        console.log('customerData[0]:', customerData[0]);
+        
         lastRefreshTime = new Date();
         updateRefreshButton(false);
         hideLoadingIndicator();
         
-        // Update dashboards
+        // Update dashboards - ONLY initialize the active tab (dealer)
         populateMonthFilter('dealer');
-        updateDashboard('dealer');
-        populateMonthFilter('customer');
-        updateDashboard('customer');
+        updateDashboardEnhanced('dealer');
+        // Don't initialize customer yet - wait for user to click the tab
         
         showSuccessMessage(`✅ Data loaded! ${dealerData.length} dealer visits, ${customerData.length} customer visits from Google Sheets.`);
         
@@ -350,7 +472,22 @@ async function loadDataFromGoogleSheets() {
 }
 function parseDate(dateStr){if(!dateStr||!dateStr.trim())return null;const parts=dateStr.split('-');if(parts.length===3)return new Date(parts[0],parts[1]-1,parts[2]);return null}
 function parseSubmissionDate(dateStr){if(!dateStr)return null;try{const months={'Jan':0,'Feb':1,'Mar':2,'Apr':3,'May':4,'Jun':5,'Jul':6,'Aug':7,'Sep':8,'Oct':9,'Nov':10,'Dec':11};const parts=dateStr.split(' ');if(parts.length>=3){const month=months[parts[0]];const day=parseInt(parts[1].replace(/[a-z]/g,''));const year=parseInt(parts[2]);return new Date(year,month,day)}}catch(e){}return null}
-function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.getElementById(tab+'-tab').classList.add('active')}
+function switchTab(tab){
+    const type = tab === 'dealers' ? 'dealer' : 'customer';
+    console.log('Switching to', type, 'tab');
+    
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(tab+'-tab').classList.add('active');
+    
+    // Initialize the selected tab with its data
+    if (!document.getElementById(type + '-frequencyTable').querySelector('tbody').innerHTML) {
+        // Tab hasn't been initialized yet, initialize it now
+        populateMonthFilter(type);
+    }
+    updateDashboardEnhanced(type);
+}
 function closeModal(){document.getElementById('detailModal').classList.remove('active')}
 window.onclick=function(event){if(event.target==document.getElementById('detailModal')){closeModal()}}
 function showDetails(name,type){const data=(type==='dealer')?dealerData:customerData;const visits=data.filter(row=>{if(type==='dealer'){return getDealerName(row)===name}else{return(row['Customer Company name']||'').trim()===name}});if(visits.length===0)return;document.getElementById('modalTitle').textContent=name;document.getElementById('modalSubtitle').textContent=visits.length+' Visit'+(visits.length>1?'s':'');let html='';visits.forEach((visit,index)=>{const region=(visit['Region Dropdown']||'').trim();const regionClass=region.toLowerCase().replace(' region','').replace(' ','');const visitDateStr=visit.visitDate?visit.visitDate.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'No date';const summaryField=(type==='dealer')?'Visit Summary Dealer ':'Visit Summary Customer ';const nextStepsField=(type==='dealer')?'Comments or info about next steps ':'Next actions ';const attendeesField=(type==='dealer')?'Dealer Attendees':'Customer Attendees';const kintoField='KINTO Attendees';html+='<div class="visit-card">';html+='<div class="visit-header">';html+='<div class="visit-date">'+visitDateStr+'</div>';if(region)html+='<span class="region-badge '+regionClass+'">'+region+'</span>';html+='</div>';if(visit[kintoField]){const attendees=visit[kintoField].split(',').map(a=>a.replace(/Attendee \d+-/g,'').trim()).filter(a=>a&&a!=='-').join(', ');if(attendees)html+='<div class="visit-detail"><div class="visit-detail-label">KINTO Attendees</div><div class="visit-detail-value">'+attendees+'</div></div>';}if(visit[attendeesField]){const attendees=visit[attendeesField].split(',').map(a=>a.replace(/Attendee \d+-/g,'').trim()).filter(a=>a&&a!=='-').join(', ');if(attendees)html+='<div class="visit-detail"><div class="visit-detail-label">'+(type==='dealer'?'Dealer':'Customer')+' Attendees</div><div class="visit-detail-value">'+attendees+'</div></div>';}if(visit[summaryField]&&visit[summaryField].trim()){html+='<div class="visit-detail"><div class="visit-detail-label">Visit Summary</div><div class="visit-detail-value">'+visit[summaryField].trim()+'</div></div>';}if(visit[nextStepsField]&&visit[nextStepsField].trim()){html+='<div class="visit-detail"><div class="visit-detail-label">Next Steps</div><div class="visit-detail-value">'+visit[nextStepsField].trim().replace(/\n/g,'<br>')+'</div></div>';}if(type==='customer'){if(visit['Current Financial Method']&&visit['Current Financial Method'].trim()){html+='<div class="visit-detail"><div class="visit-detail-label">Financial Method</div><div class="visit-detail-value">'+visit['Current Financial Method'].trim()+'</div></div>';}if(visit['Financial institutions (Leasing companies) ']&&visit['Financial institutions (Leasing companies) '].trim()){html+='<div class="visit-detail"><div class="visit-detail-label">Financial Institution</div><div class="visit-detail-value">'+visit['Financial institutions (Leasing companies) '].trim()+'</div></div>';}}html+='</div>';});document.getElementById('modalBody').innerHTML=html;document.getElementById('detailModal').classList.add('active')}
@@ -372,5 +509,380 @@ document.getElementById('dealer-includeNoDate').addEventListener('change',()=>{p
 document.getElementById('customer-monthFilter').addEventListener('change',()=>updateDashboard('customer'));
 document.getElementById('customer-regionFilter').addEventListener('change',()=>updateDashboard('customer'));
 document.getElementById('customer-includeNoDate').addEventListener('change',()=>{populateMonthFilter('customer');updateDashboard('customer')});
+
+
+// ===== STATE MANAGEMENT =====
+let selectedRegion = 'all';
+let currentPage = {
+    summaryStats: 1,
+    inactiveAlerts: 1,
+    visitTimeline: 1,
+    'dealer-frequency': 1,
+    'customer-frequency': 1,
+    'dealer-nextSteps': 1,
+    'customer-nextSteps': 1
+};
+
+// Track all data for pagination
+let allData = {
+    dealerData: [],
+    customerData: [],
+    dealerSummaryStats: [],
+    customerSummaryStats: [],
+    dealerInactive: [],
+    customerInactive: [],
+    dealerTimeline: [],
+    customerTimeline: [],
+    dealerFrequency: [],
+    customerFrequency: [],
+    dealerNextSteps: [],
+    customerNextSteps: []
+};
+const ITEMS_PER_PAGE = 10;
+
+// ===== DATA SOURCE HELPER =====
+function getDataByType(type){
+    return (type === 'dealer') ? dealerData : customerData;
+}
+
+function getNameField(type){
+    return (type === 'dealer') ? 'Dealer name' : 'Customer Company name';
+}
+
+function getDealerOrCustomerName(type, row){
+    if(type === 'dealer'){
+        return getDealerName(row);
+    } else {
+        const nameField = 'Customer Company name';
+        return (row[nameField] || '').trim();
+    }
+}
+
+
+
+// ===== TOGGLE SECTION =====
+function toggleSection(sectionId){
+    const section = document.getElementById(sectionId);
+    const btn = event.target;
+    
+    if(section.style.display === 'none'){
+        section.style.display = 'block';
+        btn.textContent = 'Hide';
+        btn.classList.remove('hidden');
+    } else {
+        section.style.display = 'none';
+        btn.textContent = 'Show';
+        btn.classList.add('hidden');
+    }
+}
+
+// ===== REGION SELECTION =====
+function selectRegion(region){
+    selectedRegion = region;
+    
+    // Update button states
+    document.querySelectorAll('.region-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Reset pagination
+    currentPage = { summaryStats: 1, inactiveAlerts: 1, visitTimeline: 1 };
+    
+    // Update all sections
+    const type = document.querySelector('.tab.active').textContent.includes('Dealer') ? 'dealer' : 'customer';
+    updateDashboardEnhanced(type);
+}
+
+
+// ===== FILTER BY REGION CARD CLICK =====
+function filterByRegionCard(region, type){
+    selectedRegion = region;
+    
+    // Update the Region dropdown to match
+    const regionDropdown = document.getElementById(type + '-regionFilter');
+    if(regionDropdown){
+        regionDropdown.value = region;
+    }
+    
+    // Reset pagination
+    currentPage = { 
+        summaryStats: 1, 
+        inactiveAlerts: 1, 
+        visitTimeline: 1,
+        'dealer-frequency': 1,
+        'customer-frequency': 1,
+        'dealer-nextSteps': 1,
+        'customer-nextSteps': 1
+    };
+    
+    // Update the dashboard
+    updateDashboardEnhanced(type);
+}
+
+// ===== FILTER BY REGION =====
+function filterByRegion(data){
+    if(selectedRegion === 'all') return data;
+    return data.filter(row => (row['Region Dropdown'] || '').trim() === selectedRegion);
+}
+
+// ===== PAGINATION HELPER =====
+function paginateArray(array, page = 1){
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    return {
+        data: array.slice(start, end),
+        totalPages: Math.ceil(array.length / ITEMS_PER_PAGE),
+        totalItems: array.length,
+        currentPage: page
+    };
+}
+
+// ===== PAGINATION RENDERER =====
+function renderPagination(containerId, totalPages, currentPage, onPageChange, type, totalItems){
+    const container = document.getElementById(containerId);
+    if(!container || totalPages <= 1) {
+        if(container) container.innerHTML = '';
+        return;
+    }
+    
+    const typeParam = type ? `, '${type}'` : '';
+    let html = `<button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="${onPageChange}(${currentPage - 1}${typeParam})">← Previous</button>`;
+    const itemsText = totalItems ? ` (${totalItems} total)` : '';
+    html += `<span class="pagination-info">Page ${currentPage} of ${totalPages}${itemsText}</span>`;
+    html += `<button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="${onPageChange}(${currentPage + 1}${typeParam})">Next →</button>`;
+    
+    container.innerHTML = html;
+}
+
+// ===== NEW FEATURES: REGION DETAILS =====
+function showRegionDetails(type, region){
+    const data=(type==='dealer')?dealerData:customerData;
+    const regionName=region.replace(' region','').trim();
+    const regionVisits=data.filter(row=>{
+        const rowRegion=(row['Region Dropdown']||'').trim();
+        return rowRegion===region;
+    });
+    
+    document.getElementById('regionModalTitle').textContent=regionName+' Region Details';
+    document.getElementById('regionModalSubtitle').textContent=regionVisits.length+' Visit'+(regionVisits.length>1?'s':'');
+    
+    let html='<table style="width:100%;border-collapse:collapse;"><tr style="background:var(--kinto-blue);color:#fff;"><th style="padding:1rem;text-align:left;">Date</th><th style="padding:1rem;text-align:left;">Dealer/Customer</th><th style="padding:1rem;text-align:left;">Attendees</th></tr>';
+    
+    regionVisits.forEach(visit=>{
+        const dateStr=visit.visitDate?visit.visitDate.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'No date';
+        const nameField=(type==='dealer')?'Dealer name':'Customer Company name';
+        const name=(type==='dealer')?getDealerName(visit):(visit[nameField]||'').trim();
+        const attendees=visit['KINTO Attendees']||'';
+        html+='<tr style="border-bottom:1px solid var(--border-color);"><td style="padding:1rem;">'+dateStr+'</td><td style="padding:1rem;">'+name+'</td><td style="padding:1rem;">'+attendees+'</td></tr>';
+    });
+    
+    html+='</table>';
+    document.getElementById('regionModalBody').innerHTML=html;
+    document.getElementById('regionDetailsModal').classList.add('active');
+}
+
+function closeRegionModal(){
+    document.getElementById('regionDetailsModal').classList.remove('active');
+}
+
+function exportRegionDataCSV(){
+    // Get current region data and export as CSV
+    alert('CSV export feature - downloads filtered region data');
+}
+
+// ===== NEW FEATURES: SUMMARY STATS =====
+function generateSummaryStats(type){
+    // Use ONLY the correct data for this type
+    const data = getDataByType(type);
+    const itemVisits={};
+    
+    // Count ALL visits from this specific data source
+    data.forEach(row=>{
+        const name = getDealerOrCustomerName(type, row);
+        if(name) itemVisits[name] = (itemVisits[name] || 0) + 1;
+    });
+    
+    const totalVisits = data.length;
+    const uniqueCount = Object.keys(itemVisits).length;
+    const visitCounts = Object.values(itemVisits).sort((a,b) => b-a);
+    const avgVisits = (uniqueCount > 0) ? (totalVisits / uniqueCount).toFixed(1) : 0;
+    const maxVisits = visitCounts.length > 0 ? visitCounts[0] : 0;
+    
+    const statsHTML=`
+        <div class="stat-box">
+            <div class="stat-box-label">Total Visits</div>
+            <div class="stat-box-value">${totalVisits}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-label">Unique ${type==='dealer'?'Dealers':'Customers'}</div>
+            <div class="stat-box-value">${uniqueCount}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-label">Average Visits</div>
+            <div class="stat-box-value">${avgVisits}</div>
+            <div class="stat-box-detail">per ${type==='dealer'?'dealer':'customer'}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-label">Most Active</div>
+            <div class="stat-box-value">${maxVisits}</div>
+            <div class="stat-box-detail">visits</div>
+        </div>
+    `;
+    
+    document.getElementById('statsGrid').innerHTML=statsHTML;
+    document.getElementById('summaryStats').style.display='block';
+}
+
+// ===== NEW FEATURES: VISIT TIMELINE =====
+function generateVisitTimeline(type){
+    // Show ALL visits from this specific data source
+    const data = getDataByType(type);
+    const sorted = data.filter(r => r.visitDate).sort((a,b) => b.visitDate - a.visitDate);
+    const paginated=paginateArray(sorted, currentPage.visitTimeline);
+    let html='';
+    
+    paginated.data.forEach(visit=>{
+        const dateStr = visit.visitDate.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+        const name = getDealerOrCustomerName(type, visit);
+        const region=(visit['Region Dropdown']||'').trim();
+        const regionClass=region.toLowerCase().replace(' region','').replace(' ','');
+        const summary=(type==='dealer')?visit['Visit Summary Dealer ']:visit['Visit Summary Customer '];
+        
+        html+=`<div class="timeline-item">
+            <div class="timeline-date">${dateStr}</div>
+            <div class="timeline-dealer">${name}</div>
+            ${region?'<span class="timeline-region region-badge '+regionClass+'">'+region+'</span>':''}
+            ${summary?'<div style="color:var(--text-secondary);font-size:.9rem;margin-top:.5rem;">'+summary+'</div>':''}
+        </div>`;
+    });
+    
+    if(html==='')html='<p style="color:var(--text-secondary);">No visits found for this period.</p>';
+    
+    document.getElementById('timelineContent').innerHTML=html;
+    renderPagination('timelinePagination', paginated.totalPages, paginated.currentPage, 'changeTimelinePage', null, sorted.length);
+    document.getElementById('visitTimeline').style.display='block';
+}
+
+function changeTimelinePage(page){
+    currentPage.visitTimeline = page;
+    const type = document.querySelector('.tab.active').textContent.includes('Dealer') ? 'dealer' : 'customer';
+    generateVisitTimeline(type);
+}
+
+// ===== NEW FEATURES: INACTIVE DEALERS/CUSTOMERS =====
+function generateInactiveAlerts(type){
+    const allData=(type==='dealer')?dealerData:customerData;
+    let filteredData=filterByRegion(allData);
+    const fortyFiveDaysAgo=new Date();
+    fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate()-45);
+    
+    const nameField=(type==='dealer')?'Dealer name':'Customer Company name';
+    const dealerLastVisit={};
+    
+    filteredData.forEach(row=>{
+        const name=(type==='dealer')?getDealerName(row):(row[nameField]||'').trim();
+        if(name&&row.visitDate){
+            if(!dealerLastVisit[name]||row.visitDate>dealerLastVisit[name]){
+                dealerLastVisit[name]=row.visitDate;
+            }
+        }
+    });
+    
+    const inactive=Object.entries(dealerLastVisit).filter(([name,date])=>date<fortyFiveDaysAgo).sort((a,b)=>a[1]-b[1]);
+    
+    if(inactive.length===0){
+        document.getElementById('inactiveAlerts').style.display='none';
+        return;
+    }
+    
+    const paginated=paginateArray(inactive, currentPage.inactiveAlerts);
+    let html='';
+    paginated.data.forEach(([name,date])=>{
+        const daysAgo=Math.floor((new Date()-date)/(1000*60*60*24));
+        html+=`<div class="alert-item">
+            <div class="alert-name">${name}</div>
+            <div class="alert-detail">Last visited ${daysAgo} days ago (${date.toLocaleDateString()})</div>
+        </div>`;
+    });
+    
+    if(html==='') html='<p>No inactive dealers in this region.</p>';
+    
+    document.getElementById('inactiveList').innerHTML=html;
+    renderPagination('inactivePagination', paginated.totalPages, paginated.currentPage, 'changeInactivePage', null, inactive.length);
+    document.getElementById('inactiveAlerts').style.display='block';
+}
+
+function changeInactivePage(page){
+    currentPage.inactiveAlerts = page;
+    const type = document.querySelector('.tab.active').textContent.includes('Dealer') ? 'dealer' : 'customer';
+    generateInactiveAlerts(type);
+}
+
+// Update dashboard to show new features
+function updateDashboardEnhanced(type){
+    console.log('updateDashboardEnhanced called with type:', type);
+    try {
+        updateDashboard(type);
+        try { generateSummaryStats(type); } catch(e) { console.error('Summary stats error:', e); }
+        try { generateVisitTimeline(type); } catch(e) { console.error('Timeline error:', e); }
+        try { generateInactiveAlerts(type); } catch(e) { console.error('Inactive alerts error:', e); }
+    } catch(e) {
+        console.error('Dashboard update error:', e);
+        updateDashboard(type);
+    }
+    
+    // Reset pagination when switching tabs
+    currentPage.inactiveAlerts = 1;
+    currentPage.visitTimeline = 1;
+}
+
+// Make region cards clickable
+function makeRegionCardsClickable(type){
+    const regions=['Central region','East Coast region','North region','West Coast region'];
+    regions.forEach(region=>{
+        const regionKey=region.replace(' region','').toLowerCase();
+        const card=document.querySelector('[id*="'+regionKey+'"]')?.closest('.stat-card');
+        if(card){
+            card.classList.add('region-card-clickable');
+            card.onclick=()=>showRegionDetails(type,region);
+        }
+    });
+}
+
+
+// ===== DOWNLOAD REPORT FUNCTIONS =====
+function downloadReportCSV(){
+    const type = document.querySelector('.tab.active').textContent.includes('Dealer') ? 'dealer' : 'customer';
+    let data = filterData(type);
+    data = filterByRegion(data);
+    
+    const headers = ['Date', type==='dealer'?'Dealer Name':'Customer Name', 'Region', 'Summary', 'Next Steps', 'Attendees'];
+    const nameField = type==='dealer'?'Dealer name':'Customer Company name';
+    const summaryField = type==='dealer'?'Visit Summary Dealer ':'Visit Summary Customer ';
+    const nextStepsField = type==='dealer'?'Comments or info about next steps ':'Next actions ';
+    
+    let csv = headers.join(',') + '\n';
+    
+    data.forEach(row => {
+        const date = row.visitDate ? row.visitDate.toLocaleDateString() : '';
+        const name = type==='dealer' ? getDealerName(row) : (row[nameField]||'').trim();
+        const region = (row['Region Dropdown']||'').trim();
+        const summary = (row[summaryField]||'').replace(/,/g,' ').trim();
+        const nextSteps = (row[nextStepsField]||'').replace(/,/g,' ').trim();
+        const attendees = (row['KINTO Attendees']||'').replace(/,/g,' ').trim();
+        
+        csv += `"${date}","${name}","${region}","${summary}","${nextSteps}","${attendees}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.setAttribute('href', URL.createObjectURL(blob));
+    link.setAttribute('download', `KINTO_${type}_visits_${new Date().toISOString().split('T')[0]}.csv`);
+    link.click();
+}
+
+function downloadReportPDF(){
+    alert('PDF download coming soon! For now, please use CSV export and open in Excel.');
+}
+
 window.addEventListener('DOMContentLoaded',loadDataFromGoogleSheets);
 </script></body></html>
