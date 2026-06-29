@@ -84,6 +84,8 @@ select:focus{border-color:var(--kinto-blue);outline:0;box-shadow:0 0 0 3px var(-
 .frequency-table .clickable-name:hover{color:var(--kinto-blue-dark)}
 .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.5);animation:fadeIn .3s ease}
 .modal.active{display:block}
+#prospectDetailModal{align-items:center;justify-content:center;}
+#prospectDetailModal .modal-content{margin:auto;}
 .modal-content{background:var(--bg-card);margin:5% auto;padding:0;border-radius:12px;width:90%;max-width:800px;max-height:80vh;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3);animation:slideIn .3s ease}
 .modal-header{background:var(--kinto-blue);color:#fff;padding:2rem;border-radius:12px 12px 0 0}
 .modal-header h2{font-size:1.75rem;font-weight:400;margin-bottom:.5rem}
@@ -190,11 +192,13 @@ select:focus{border-color:var(--kinto-blue);outline:0;box-shadow:0 0 0 3px var(-
 .data-table tbody tr:nth-child(even) {
     background: #FAFBFC;
 }
-.pd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem 1.2rem;margin-bottom:1.2rem;}
-.pd-field{display:flex;flex-direction:column;gap:.15rem;}
-.pd-label{font-size:.75rem;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.04em;}
-.pd-value{font-size:.9rem;color:#1a1a1a;}
-.pd-section-title{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#eb0a1e;border-bottom:2px solid #eb0a1e;padding-bottom:.25rem;margin-bottom:.75rem;}
+.pd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem 1.5rem;margin-bottom:1.75rem;}
+.pd-field{display:flex;flex-direction:column;gap:.25rem;}
+.pd-label{font-size:.75rem;font-weight:600;color:#7A93B5;text-transform:uppercase;letter-spacing:.04em;}
+.pd-value{font-size:.9rem;color:#1a1a1a;line-height:1.5;}
+.pd-section-title{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E3A5F;border-bottom:2px solid #B8C6DA;padding-bottom:.5rem;margin-top:1.75rem;margin-bottom:1.1rem;}
+.modal-content:has(.pd-section-title){padding:24px 28px 28px;}
+.modal-content:has(.pd-section-title) .pd-section-title:first-of-type{margin-top:.5rem;}
 #prospects-tab .insights-grid{grid-template-columns:1fr;}
 #prospects-tab .insight-card{width:100%;box-sizing:border-box;}
 #prospects-tab .data-table{min-width:1100px;}
@@ -371,6 +375,7 @@ let customerData = [];
 let prospectData = [];
 let prospectTableRecords = [];
 let dealerTableRecords = [];
+let customerTableRecords = [];
 let dealerChart = null;
 let customerChart = null;
 let prospectChart = null;
@@ -1103,6 +1108,7 @@ function generateDataTable(type, data) {
             comments: row['Comments'] || ''
         }));
     } else {
+        customerTableRecords = data;
         tableData = data.map(row => ({
             contactName: row['Customer contact name'] || '',
             phone: row['Phone'] || '',
@@ -1166,6 +1172,10 @@ function generateDataTable(type, data) {
                     <td>${row.dueDate}</td>
                 `;
             } else {
+                const globalIdx = (paginated.currentPage - 1) * ITEMS_PER_PAGE + i;
+                tr.style.cursor = 'pointer';
+                tr.title = 'Click to view full details';
+                tr.onclick = () => showCustomerDetail(globalIdx);
                 tr.innerHTML = `
                     <td>${truncate(row.contactName, 20)}</td>
                     <td>${truncate(row.phone, 15)}</td>
@@ -1197,6 +1207,32 @@ function changeDataPage(page, type) {
 function truncate(text, len) {
     if (!text) return '';
     return text.length > len ? text.substring(0, len) + '...' : text;
+}
+
+function positionDetailModalInView() {
+    const modal = document.getElementById('prospectDetailModal');
+    if (!modal) return;
+    // Detect the active vertical scroll offset. In a normal page or an
+    // internally-scrolling iframe this is the window scroll; we also check the
+    // document element as a fallback for embedded (GHL) contexts.
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
+    // If the iframe is auto-sized (no internal scroll), position:fixed pins to the
+    // top of the whole tall canvas. In that case anchor the backdrop to the
+    // current scroll band so the card floats in front of the user's view.
+    const docH = document.documentElement.scrollHeight || 0;
+    const iframeIsAutoSized = (docH > viewportH + 50) && (scrollTop === 0) && (window.self !== window.top);
+    if (iframeIsAutoSized) {
+        // Fall back to absolute positioning anchored at the visible band.
+        modal.style.position = 'absolute';
+        modal.style.top = scrollTop + 'px';
+        modal.style.height = viewportH + 'px';
+    } else {
+        // Normal / internally-scrolling case: fixed full-viewport flex centering.
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.height = '100%';
+    }
 }
 
 function showDealerDetail(index) {
@@ -1251,7 +1287,62 @@ function showDealerDetail(index) {
             </div>
         </div>`;
 
-    document.getElementById('prospectDetailModal').style.display = 'flex';
+    document.getElementById('prospectDetailModal').style.display = 'flex';    positionDetailModalInView();
+}
+
+function showCustomerDetail(index) {
+    const r = customerTableRecords[index];
+    if (!r) return;
+
+    const field = (label, val) => val ? `
+        <div class="pd-field">
+            <div class="pd-label">${label}</div>
+            <div class="pd-value">${val}</div>
+        </div>` : '';
+
+    const cleanAttendees = val => (val || '').split(',').map(a => a.replace(/Attendee \d+-/g,'').trim()).filter(a => a && a !== '-').join(', ');
+
+    document.getElementById('prospectDetailModal').innerHTML = `
+        <div class="modal-content" style="max-width:780px;max-height:88vh;overflow-y:auto;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.2rem;">
+                <div>
+                    <h2 style="margin:0;font-size:1.3rem;">${r['Customer Company name'] || ''}</h2>
+                    <div style="color:#666;font-size:.95rem;margin-top:.25rem;">${r['Customer contact name'] || ''}</div>
+                </div>
+                <div style="display:flex;gap:.6rem;align-items:center;">
+                    ${r['Region Dropdown'] ? `<span style="background:#f0f0f0;padding:.25rem .75rem;border-radius:12px;font-size:.8rem;">${(r['Region Dropdown']||'').trim()}</span>` : ''}
+                    <button onclick="document.getElementById('prospectDetailModal').style.display='none'" style="background:none;border:none;font-size:1.4rem;cursor:pointer;line-height:1;padding:0 .25rem;">&times;</button>
+                </div>
+            </div>
+
+            <div class="pd-section-title">Visit Info</div>
+            <div class="pd-grid">
+                ${field('Contact Name', r['Customer contact name'])}
+                ${field('Phone', r['Phone'])}
+                ${field('Company', r['Customer Company name'])}
+                ${field('Date of Visit', r['Date of Visit'])}
+                ${field('Region', (r['Region Dropdown']||'').trim())}
+            </div>
+
+            <div class="pd-section-title">Attendees</div>
+            <div class="pd-grid">
+                ${field('KINTO Attendees', cleanAttendees(r['KINTO Attendees']))}
+                ${field('Customer Attendees', cleanAttendees(r['Customer Attendees']))}
+            </div>
+
+            ${(r['Current Financial Method'] || r['Financial institutions (Leasing companies)']) ? `<div class="pd-section-title">Financial Info</div><div class="pd-grid">${field('Current Financial Method', r['Current Financial Method'])}${field('Financial Institution', r['Financial institutions (Leasing companies)'])}</div>` : ''}
+
+            ${r['Visit Summary Customer'] ? `<div class="pd-section-title">Visit Summary</div><div style="background:#f8f8f8;border-radius:8px;padding:1rem;font-size:.9rem;line-height:1.6;white-space:pre-wrap;">${r['Visit Summary Customer']}</div>` : ''}
+
+            <div class="pd-section-title" style="margin-top:1rem;">Actions</div>
+            <div class="pd-grid">
+                ${field('Next Actions', r['Next actions'])}
+                ${field('Owner', r['Next actions owner'])}
+                ${field('Due Date', r['Next actions to be completed by'])}
+            </div>
+        </div>`;
+
+    document.getElementById('prospectDetailModal').style.display = 'flex';    positionDetailModalInView();
 }
 
 function showProspectDetail(index) {
@@ -1324,7 +1415,7 @@ function showProspectDetail(index) {
             ${r['Comments'] ? `<div class="pd-section-title" style="margin-top:1rem;">Comments</div><div style="background:#f8f8f8;border-radius:8px;padding:1rem;font-size:.9rem;line-height:1.6;white-space:pre-wrap;">${r['Comments']}</div>` : ''}
         </div>`;
 
-    document.getElementById('prospectDetailModal').style.display = 'flex';
+    document.getElementById('prospectDetailModal').style.display = 'flex';    positionDetailModalInView();
 }
 
 function populateRoundupMonthFilter(){
