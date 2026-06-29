@@ -1209,30 +1209,65 @@ function truncate(text, len) {
     return text.length > len ? text.substring(0, len) + '...' : text;
 }
 
+// Track where the user last clicked (relative to the iframe document) and the
+// current visible band, so detail popups can open right where the user is —
+// without needing any cooperation from the embedding (GHL) page.
+let lastClickY = 0;
+let parentViewport = null;
+
+document.addEventListener('click', function(e){
+    // pageY is relative to the top of the iframe document — exactly what we need
+    // to anchor the modal near the clicked row.
+    if (typeof e.pageY === 'number') lastClickY = e.pageY;
+}, true);
+
+// Optional: if the embedding page chooses to send scroll info, we use it for
+// even more precise centring. Harmless if it never arrives.
+window.addEventListener('message', function(e){
+    const d = e.data;
+    if (d && d.type === 'ghl-scroll' && typeof d.scrollTop === 'number') {
+        parentViewport = {
+            scrollTop: d.scrollTop,
+            viewportHeight: d.viewportHeight || 0,
+            iframeTop: d.iframeTop || 0
+        };
+        const m = document.getElementById('prospectDetailModal');
+        if (m && m.style.display === 'flex') positionDetailModalInView();
+    }
+});
+
 function positionDetailModalInView() {
     const modal = document.getElementById('prospectDetailModal');
     if (!modal) return;
-    // Detect the active vertical scroll offset. In a normal page or an
-    // internally-scrolling iframe this is the window scroll; we also check the
-    // document element as a fallback for embedded (GHL) contexts.
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
-    // If the iframe is auto-sized (no internal scroll), position:fixed pins to the
-    // top of the whole tall canvas. In that case anchor the backdrop to the
-    // current scroll band so the card floats in front of the user's view.
-    const docH = document.documentElement.scrollHeight || 0;
-    const iframeIsAutoSized = (docH > viewportH + 50) && (scrollTop === 0) && (window.self !== window.top);
-    if (iframeIsAutoSized) {
-        // Fall back to absolute positioning anchored at the visible band.
+    const card = modal.querySelector('.modal-content');
+
+    // Most precise: embedding page told us its scroll position.
+    if (parentViewport) {
+        const vh = parentViewport.viewportHeight || window.innerHeight || 600;
+        const bandTop = Math.max(0, parentViewport.scrollTop - parentViewport.iframeTop);
         modal.style.position = 'absolute';
-        modal.style.top = scrollTop + 'px';
-        modal.style.height = viewportH + 'px';
-    } else {
-        // Normal / internally-scrolling case: fixed full-viewport flex centering.
-        modal.style.position = 'fixed';
-        modal.style.top = '0';
-        modal.style.height = '100%';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.top = bandTop + 'px';
+        modal.style.height = vh + 'px';
+        if (card) { card.style.margin = 'auto'; card.style.top = ''; card.style.transform = ''; card.style.position = ''; }
+        return;
     }
+
+    // Self-contained path (works in a stretched GHL iframe with no parent script):
+    // Anchor the backdrop band at the click point so it overlays the user's
+    // current view. The card centres within that band. Because we click a row
+    // that is on screen, this always lands in view.
+    const viewH = window.innerHeight || 600;
+    // Start the backdrop band a bit above the click so the card is roughly
+    // centred around where the user looked; clamp to document top.
+    const bandTop = Math.max(0, lastClickY - (viewH / 2));
+    modal.style.position = 'absolute';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.top = bandTop + 'px';
+    modal.style.height = viewH + 'px';
+    if (card) { card.style.margin = 'auto'; card.style.top = ''; card.style.transform = ''; card.style.position = ''; }
 }
 
 function showDealerDetail(index) {
