@@ -416,7 +416,7 @@ async function fetchGoogleSheetData(range) {
 
 // Filter test data
 function filterTestData(data, type) {
-    const testKeywords = ['test', 'craig', 'demo', 'sample', 'xxx', 'zzz'];
+    const testKeywords = ['test', 'demo', 'sample', 'xxx', 'zzz'];
     
     return data.filter(row => {
         const nameField = type === 'dealer' ? 
